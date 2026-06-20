@@ -15,18 +15,13 @@ jobs:
       - uses: android-actions/setup-android@v3
       - name: Create env
         run: echo "GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }}" > .env
-      - name: Unzip
-        run: unzip *.zip -d project
-      - name: Find gradlew
-        run: find project -name "gradlew"
-      - name: Build APK
+      - name: Unzip and explore
         run: |
-          GRADLEW=$(find project -name "gradlew" | head -1)
-          DIR=$(dirname $GRADLEW)
-          chmod +x $GRADLEW
-          cd $DIR
-          ./gradlew assembleDebug
+          unzip *.zip -d project
+          echo "=== project contents ==="
+          find project -type f | head -30
       - uses: actions/upload-artifact@v4
         with:
           name: debug-apk
           path: "**/app/build/outputs/apk/debug/*.apk"
+        if: always()
