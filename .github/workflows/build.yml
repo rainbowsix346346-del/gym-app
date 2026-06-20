@@ -13,15 +13,20 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
       - uses: android-actions/setup-android@v3
+      - name: Unzip
+        run: unzip *.zip -d project
       - name: Create env
-        run: echo "GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }}" > .env
-      - name: Unzip and explore
+        run: echo "GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }}" > project/.env
+      - name: Setup Gradle
         run: |
-          unzip *.zip -d project
-          echo "=== project contents ==="
-          find project -type f | head -30
+          cd project
+          gradle wrapper
+      - name: Build APK
+        run: |
+          cd project
+          chmod +x gradlew
+          ./gradlew assembleDebug
       - uses: actions/upload-artifact@v4
         with:
           name: debug-apk
-          path: "**/app/build/outputs/apk/debug/*.apk"
-        if: always()
+          path: project/app/build/outputs/apk/debug/*.apk
