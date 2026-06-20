@@ -27,7 +27,7 @@ jobs:
           echo "GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }}" > .env
 
       - name: Unzip project
-        run: unzip gym-\&-bodybuilding.zip
+        run: unzip "gym-&-bodybuilding.zip"
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
